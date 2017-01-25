@@ -1,18 +1,18 @@
 package services
 
 import (
-	"bitbucket.org/Martinyuk/muzer/repositories"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	"github.com/pixfid/go-zaycevnet/api"
 	"net/url"
 	"strconv"
+	"sync"
+	"github.com/jinzhu/gorm"
+	zaycevnet   "github.com/AlexanderMartinyuk/go-zaycevnet/api"
+	prostopleer "github.com/AlexanderMartinyuk/prostopleer"
+	"bitbucket.org/Martinyuk/muzer/repositories"
 )
 
 // GetTrackWithDownloadByID ..
 func GetTrackWithDownloadByID(db *gorm.DB, trackID uint) (*repositories.Track, *repositories.TrackDownload) {
-
-	// 1. Get track by id.
 	trackOriginal := repositories.GetTrackWithDownloadsByID(db, trackID)
 	if trackOriginal == nil {
 		return nil, nil
@@ -28,49 +28,28 @@ func GetTrackWithDownloadByID(db *gorm.DB, trackID uint) (*repositories.Track, *
 		panic(fmt.Sprintf("Cannot get artist by track_id=%d", trackID))
 	}
 
-	// 3. Create ZacevNet client and perform search for track downloads.
-	client := api.NewZClient(nil, "", "kmskoNkYHDnl3ol2")
-	err := client.Auth()
-	params := url.Values{}
-	params.Add("query", fmt.Sprintf("%s %s", artistOriginal.Name, trackOriginal.Title))
-	params.Add("page", strconv.Itoa(1))
-	params.Add("type", "all")
-	params.Add("sort", "")
-	params.Add("style", "")
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	result, err := client.Search(params)
-	if err != nil {
-		panic(err)
-	}
-
-	// 4. Save found results in DB.
-	for _, track := range result.Tracks {
-		println(track.Track, "  ", track.Bitrate)
-
-		downlaod, err := client.Download(track.ID)
-		if err != nil {
-			panic(err)
+	go func() {
+        defer wg.Done()
+        downloads := getTrackDownloadsFromZaycevnet(artistOriginal.Name, trackOriginal.Title)
+		for _, download := range downloads {
+			download.TrackID = trackOriginal.ID
+			repositories.SaveTrackDownload(db, download)
 		}
+    }()
 
-		trackDownload := repositories.TrackDownload{
-			TrackID:   trackOriginal.ID,
-			Source:    repositories.ZaycevNet,
-			SourceID:  track.ID,
-			URL:       downlaod.URL,
-			Bitrate:   uint(track.Bitrate),
-			Date:      uint64(track.Date),
-			Duration:  0,
-			TrackName: track.Track,
+	go func() {
+        defer wg.Done()
+        downloads := getTrackDownloadsFromProstopleer(artistOriginal.Name, trackOriginal.Title)
+		for _, download := range downloads {
+			download.TrackID = trackOriginal.ID
+			repositories.SaveTrackDownload(db, download)
 		}
-
-		duration, err := strconv.Atoi(track.Duration)
-		if err == nil {
-			trackDownload.Duration = uint(duration)
-		}
-
-		repositories.SaveTrackDownload(db, &trackDownload)
-
-	}
+    }()
+	
+	wg.Wait()	
 
 	trackOriginal = repositories.GetTrackWithDownloadsByID(db, trackID)
 	if trackOriginal == nil {
@@ -91,4 +70,76 @@ func getMostAppropriateTrackDownload(track *repositories.Track) *repositories.Tr
 	}
 
 	return &track.Downloads[0]
+}
+
+func getTrackDownloadsFromZaycevnet(artistName string, trackTitle string) (results []*repositories.TrackDownload) {
+	client := zaycevnet.NewZClient(nil, "", "kmskoNkYHDnl3ol2")
+	err := client.Auth()
+	if err != nil {
+		panic(err)
+	}
+
+	params := url.Values{}
+	params.Add("query", fmt.Sprintf("%s %s", artistName, trackTitle))
+	params.Add("page", strconv.Itoa(1))
+	params.Add("type", "all")
+	params.Add("sort", "")
+	params.Add("style", "")
+
+	result, err := client.Search(params)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, track := range result.Tracks {
+		downlaod, err := client.Download(track.ID)
+		if err != nil {
+			panic(err)
+		}
+
+		duration, _ := strconv.Atoi(track.Duration)
+		trackDownload := repositories.TrackDownload{
+			TrackID:   0,
+			Source:    repositories.ZaycevNet,
+			SourceID:  strconv.Itoa(track.ID),
+			URL:       downlaod.URL,
+			Bitrate:   uint(track.Bitrate),
+			Duration:  uint(duration),
+			TrackName: track.Track,
+		}
+		results = append(results, &trackDownload)
+	}
+	return results
+}
+
+func getTrackDownloadsFromProstopleer(artistName string, trackTitle string) (results []*repositories.TrackDownload) {
+	api := &prostopleer.Api{
+        User:     "129103",
+        Password: "QF9SUdiR2NMR3EF4ySMW",
+    }
+	tracks, _, err := api.SearchTrack(fmt.Sprintf("artist:%s track:%s", artistName, trackTitle), "all", 1, 10)
+	if err != nil {
+		panic(err)
+	}
+
+    for _, track := range tracks {
+        track.GetLink("listen")
+        
+		bitrate, _ := strconv.ParseUint(track.Bitrate, 10, 32)
+		duration, _ := strconv.ParseUint(track.Duration, 10, 32)
+		size, _ := strconv.ParseUint(track.Size, 10, 32)
+		trackDownload := repositories.TrackDownload{
+			TrackID:   0,
+			Source:    repositories.ProstoPleer,
+			SourceID:  track.Id,
+			URL:       track.ListenUrl,
+			Bitrate:   uint(bitrate),
+			Duration:  uint(duration),
+			TrackName: track.Name,
+			Size:      uint(size),
+		}
+
+		results = append(results, &trackDownload)
+    }
+	return results
 }

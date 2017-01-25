@@ -47,12 +47,12 @@ type TrackDownload struct {
 	gorm.Model
 	TrackID   uint
 	Source    SourceType
-	SourceID  int
+	SourceID  string
+	TrackName string
 	URL       string
 	Bitrate   uint
 	Date      uint64
 	Duration  uint
-	TrackName string
 	Size      uint
 }
 

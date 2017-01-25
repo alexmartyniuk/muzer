@@ -81,7 +81,7 @@ func getTrackByID(db *gorm.DB, trackID uint, fetchDownloads bool) (result *Track
 	return trackOriginal
 }
 
-func getTrackDownloadByExternalID(db *gorm.DB, externalSource SourceType, externalID int) (result *TrackDownload) {
+func getTrackDownloadByExternalID(db *gorm.DB, externalSource SourceType, externalID string) (result *TrackDownload) {
 	downloadOriginal := &TrackDownload{}
 
 	db = db.Where(TrackDownload{Source: externalSource, SourceID: externalID}).First(downloadOriginal)
