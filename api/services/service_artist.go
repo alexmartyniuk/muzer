@@ -2,7 +2,7 @@ package services
 
 import (
 	"bitbucket.org/Martinyuk/discogs/api"
-	"bitbucket.org/Martinyuk/muzer/repositories"
+	"bitbucket.org/Martinyuk/muzer/api/repositories"
 	"github.com/jinzhu/gorm"
 	"strconv"
 )

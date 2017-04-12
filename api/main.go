@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bitbucket.org/Martinyuk/muzer/controllers"
-	"bitbucket.org/Martinyuk/muzer/repositories"
+	"bitbucket.org/Martinyuk/muzer/api/controllers"
+	"bitbucket.org/Martinyuk/muzer/api/repositories"
 )
 
 func main() {

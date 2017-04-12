@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"bitbucket.org/Martinyuk/muzer/repositories"
+	"bitbucket.org/Martinyuk/muzer/api/repositories"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"

@@ -8,7 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	zaycevnet   "github.com/AlexanderMartinyuk/go-zaycevnet/api"
 	prostopleer "github.com/AlexanderMartinyuk/prostopleer"
-	"bitbucket.org/Martinyuk/muzer/repositories"
+	"bitbucket.org/Martinyuk/muzer/api/repositories"
 )
 
 // GetTrackWithDownloadByID ..
