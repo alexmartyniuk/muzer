@@ -15,6 +15,7 @@ type AlbumDto struct {
 	ID    uint   `json:"id"`
 	Title string `json:"title"`
 	Year  uint   `json:"year"`
+	Thumb string `json:"thumb"`
 }
 
 type TrackDto struct {
@@ -50,6 +51,7 @@ func MakeAlbumDto(album *repositories.Album) *AlbumDto {
 		album.ID,
 		album.Title,
 		album.Year,
+		album.Thumb,
 	}
 }
 
