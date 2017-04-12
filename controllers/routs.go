@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 	"runtime"
 )
 
@@ -27,6 +28,10 @@ func NewRouter() (e *echo.Echo) {
 	router := echo.New()
 
 	router.Use(transaction)
+	router.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+	}))
 	//router.Use(middleware.Logger())
 
 	for _, route := range routes {
