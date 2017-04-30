@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"sync"
 	"github.com/jinzhu/gorm"
-	zaycevnet   "github.com/AlexanderMartinyuk/go-zaycevnet/api"
-	prostopleer "github.com/AlexanderMartinyuk/prostopleer"
+	zaycevnet   "github.com/AlexanderMartinyuk/go-api-zaycevnet/api"
+	prostopleer "github.com/AlexanderMartinyuk/go-api-prostopleer"
 	"bitbucket.org/Martinyuk/muzer/api/repositories"
 )
 

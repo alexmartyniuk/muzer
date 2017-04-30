@@ -1,7 +1,7 @@
 package services
 
 import (
-	"bitbucket.org/Martinyuk/discogs/api"
+	"github.com/AlexanderMartinyuk/go-api-discogs/api"
 	"bitbucket.org/Martinyuk/muzer/api/repositories"
 	"github.com/jinzhu/gorm"
 	"strconv"
