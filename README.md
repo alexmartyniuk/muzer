@@ -7,6 +7,22 @@ To build the whole application you first need install:
 
 * [Go](https://golang.org/doc/install)
 * [ReactJS](https://facebook.github.io/react/docs/installation.html)
+* [PostgreSQL](https://www.postgresql.org/download/windows/)
+
+To downlaod project files you need to run command:
+```
+go get bitbucket.org/Martinyuk/muzer
+```
+After that all projects files will be available in folder %USERPROFILE%\go\src\bitbucket.org\Martinyuk\muzer
+You also need to dowload all required packages for api and ui projects:
+```
+cd  %USERPROFILE%\go\src\bitbucket.org\Martinyuk\muzer\api\
+go get
+```
+```
+cd  %USERPROFILE%\go\src\bitbucket.org\Martinyuk\muzer\ui\
+npm install
+```
 
 To start API you need go to "api" folder and execute a command: 
 ```
