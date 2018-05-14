@@ -43,6 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\AlbumModel.cs" />
+    <Compile Include="Models\ArtistModel.cs" />
+    <Compile Include="Models\SourceType.cs" />
+    <Compile Include="Models\TrackDataModel.cs" />
+    <Compile Include="Models\TrackModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +57,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mappings\" />
-    <Folder Include="Models\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
