@@ -2,10 +2,12 @@
 {
     public class TrackModel
     {
-        public uint Id { get; set; }
-        public uint AlbumId { get; set; }
+        public ulong Id { get; set; }
+        public ulong AlbumId { get; set; }
         public string Position { get; set; }
         public string Title { get; set; }
-        public uint Duration { get; set; }
+        public ulong Duration { get; set; }
+
+        public virtual AlbumModel Album { get; set; }
     }
 }

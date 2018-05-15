@@ -2,14 +2,16 @@
 {
     public class TrackDataModel
     {
-        public uint Id { get; set; }
-        public uint TrackId { get; set; }
-        public uint Duration { get; set; }
-        public uint Quality { get; set; }
-        public uint Relevance { get; set; }
+        public ulong Id { get; set; }
+        public ulong TrackId { get; set; }
+        public ulong Duration { get; set; }
+        public ulong Quality { get; set; }
+        public ulong Relevance { get; set; }
         public string Url { get; set; }
         public SourceType Source { get; set; }
-        public uint SourceId { get; set; }
+        public string SourceId { get; set; }
         public string SourceUrl { get; set; }
+
+        public virtual TrackModel Track { get; set; }
     }
 }
