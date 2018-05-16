@@ -2,8 +2,8 @@
 {
     public class TrackDataModel
     {
-        public ulong Id { get; set; }
-        public ulong TrackId { get; set; }
+        public long Id { get; set; }
+        public long TrackId { get; set; }
         public ulong Duration { get; set; }
         public ulong Quality { get; set; }
         public ulong Relevance { get; set; }
