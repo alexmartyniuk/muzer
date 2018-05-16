@@ -8,6 +8,11 @@ namespace MuzerAPI.Implementation
         public string Album { get; set; }
         public string Track { get; set; }
 
+        public override string ToString()
+        {
+            return $"{Artist} : {Album} - {Track}";
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;

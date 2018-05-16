@@ -5,31 +5,17 @@ using MuzerAPI.Implementation;
 
 namespace MuzerAPI
 {
-    using System.Diagnostics.PerformanceData;
-
     public class FindTrackTaskService
     {
-        private const string MessageQueueName = @".\Private$\MuzerFindTrackQueue";
+        private string _messageQueueName;
 
         private const long GetTimeoutInMilliseconds = 1000;
 
         private Dictionary<FindTrackTask, MessageQueueTransaction> _openedTransactions = new Dictionary<FindTrackTask, MessageQueueTransaction>();
 
-        private MessageQueue GetMessageQueue()
+        public FindTrackTaskService(string queueName = "muzer_find_track")
         {
-            MessageQueue result;
-            if (!MessageQueue.Exists(MessageQueueName))
-            {
-                result = MessageQueue.Create(MessageQueueName, true);
-            }
-            else
-            {
-                result = new MessageQueue(MessageQueueName);
-            }
-
-            result.Formatter = new XmlMessageFormatter(new[] { typeof(FindTrackTask) });
-
-            return result;
+            _messageQueueName = @".\Private$\" + queueName;
         }
 
         public bool IsTaskExists(FindTrackTask task)
@@ -69,7 +55,7 @@ namespace MuzerAPI
                 transaction.Begin();
                 try
                 {
-                    messageQueue.Send(task, transaction);
+                    messageQueue.Send(task, task.ToString(), transaction);
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -155,6 +141,37 @@ namespace MuzerAPI
             {
                 messageQueue.Close();
             }
+        }
+
+        public void DestroyStorage()
+        {
+            if (MessageQueue.Exists(_messageQueueName))
+            {
+                MessageQueue.Delete(_messageQueueName);
+            }
+        }
+
+        public FindTrackTask NewTask(string artist, string album, string track)
+        {
+            return new FindTrackTask { Artist = artist, Album = album, Track = track };
+        }
+
+        private MessageQueue GetMessageQueue()
+        {
+            MessageQueue result;
+            if (!MessageQueue.Exists(_messageQueueName))
+            {
+                result = MessageQueue.Create(_messageQueueName, true);
+            }
+            else
+            {
+                result = new MessageQueue(_messageQueueName);
+            }
+
+            //result.Formatter = new XmlMessageFormatter(new[] { typeof(FindTrackTask) });
+            result.Formatter = new JsonMessageFormatter<FindTrackTask>();
+
+            return result;
         }
     }
 }
