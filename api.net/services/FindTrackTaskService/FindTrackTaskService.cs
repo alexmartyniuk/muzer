@@ -5,9 +5,14 @@ using MuzerAPI.Implementation;
 
 namespace MuzerAPI
 {
+    using System.Diagnostics.PerformanceData;
+
     public class FindTrackTaskService
     {
         private const string MessageQueueName = @".\Private$\MuzerFindTrackQueue";
+
+        private const long GetTimeoutInMilliseconds = 1000;
+
         private Dictionary<FindTrackTask, MessageQueueTransaction> _openedTransactions = new Dictionary<FindTrackTask, MessageQueueTransaction>();
 
         private MessageQueue GetMessageQueue()
@@ -89,9 +94,21 @@ namespace MuzerAPI
             {
                 var transaction = new MessageQueueTransaction();
                 transaction.Begin();
-                FindTrackTask task = (FindTrackTask)messageQueue.Receive(transaction).Body;
-                _openedTransactions.Add(task, transaction);
-                return task;
+                try
+                {
+                    FindTrackTask task = (FindTrackTask)messageQueue.Receive(TimeSpan.FromMilliseconds(GetTimeoutInMilliseconds), transaction)?.Body;
+                    _openedTransactions.Add(task, transaction);
+                    return task;
+                }
+                catch (MessageQueueException ex)
+                {
+                    if (ex.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
+                    {
+                        return null;
+                    }
+
+                    throw;
+                }
             }
             finally
             {
