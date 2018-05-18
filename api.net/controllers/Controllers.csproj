@@ -86,6 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controlers\ArtistController.cs" />
+    <Compile Include="DtoConvertors\ArtistDtoConvertor.cs" />
+    <Compile Include="Dtos\ArtistDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -102,10 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Dtos\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Repositories\Repositories.csproj">
+      <Project>{d4c23415-fb78-4014-86d1-f1a5fcff39b9}</Project>
+      <Name>Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{2a712789-47ff-424e-a992-a43a2260b106}</Project>
       <Name>Services</Name>
