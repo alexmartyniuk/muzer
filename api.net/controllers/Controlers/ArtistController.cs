@@ -11,8 +11,6 @@ namespace MuzerAPI.Controllers
 {
     public class ArtistController : ApiController
     {
-        private DatabaseContext db = new DatabaseContext();
-
         [HttpGet]
         [Route("api/artist/search")]
         public IEnumerable<ArtistDto> Search([FromUri] string query)
