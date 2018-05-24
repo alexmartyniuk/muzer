@@ -20,6 +20,7 @@ namespace Controllers
                 new QueryStringMapping("type", "xml", new MediaTypeHeaderValue("application/xml")));
 
             // Web API routes
+            config.EnableCors();
             config.MapHttpAttributeRoutes();
         }
     }
