@@ -14,7 +14,7 @@ class Track extends React.Component {
 
 	componentDidMount() {
 		var _this = this;
-		fetch("http://localhost/tracks/" + this.props.id).then(function(response){
+		fetch("http://localhost:8080/tracks/" + this.props.id).then(function(response){
             if (response.status !== 200) {  
                 console.log('Looks like there was a problem. Status Code: ' +  response.status);  
                 return;  

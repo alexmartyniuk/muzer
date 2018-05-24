@@ -14,7 +14,7 @@ class ArtistDetails extends React.Component {
 
 	componentDidMount() {
 		var _this = this;
-		fetch("http://localhost/artists/" + this.props.params.id).then(function(response){
+		fetch("http://localhost:8080/artists/" + this.props.params.id).then(function(response){
         if (response.status !== 200) {  
         	console.log('Looks like there was a problem. Status Code: ' +  response.status);  
           	return;  
@@ -34,14 +34,14 @@ class ArtistDetails extends React.Component {
 		return (
 			<div>
 				<p>{this.state.artist.name}</p>
-				{this.state.artist.thumb &&
-					<img src={this.state.artist.thumb}/>
+				{this.state.artist.thumbUrl &&
+					<img src={this.state.artist.thumbUrl}/>
 				}
 				<ul className="list-group">
 				{this.state.albums.map(function(album, i){
 					return (
 						<li className="list-group-item">
-							<Album id={album.id} thumb={album.thumb} title={album.title} year={album.year}/>
+							<Album id={album.id} thumbUrl={album.thumbUrl} title={album.title} year={album.year}/>
 						</li>);
 				})} 
 				</ul>

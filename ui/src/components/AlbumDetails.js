@@ -14,7 +14,7 @@ class AlbumDetails extends React.Component {
 
 	componentDidMount() {
 		var _this = this;
-		fetch("http://localhost/albums/" + this.props.params.id).then(function(response){
+		fetch("http://localhost:8080/albums/" + this.props.params.id).then(function(response){
         if (response.status !== 200) {  
         	console.log('Looks like there was a problem. Status Code: ' +  response.status);  
           	return;  
@@ -34,8 +34,8 @@ class AlbumDetails extends React.Component {
 		return (
 			<div className="card-block">
 				<p>{this.state.album.title}</p>
-				{this.state.album.thumb &&
-					<img className="card-img-top" src={this.state.album.thumb}/>
+				{this.state.album.thumbUrl &&
+					<img className="card-img-top" src={this.state.album.thumbUrl}/>
 				}
 
 				{this.state.tracks.map(function(track, i){

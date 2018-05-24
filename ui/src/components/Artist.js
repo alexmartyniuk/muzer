@@ -5,8 +5,8 @@ class Artist extends React.Component {
 	render() {		
 		return (
 			<div>
-				{this.props.thumb &&
-					<img src={this.props.thumb}/>
+				{this.props.thumbUrl &&
+					<img src={this.props.thumbUrl}/>
 				}
 				<Link to={"artist/"+ this.props.id}>{this.props.name}</Link>
             </div>

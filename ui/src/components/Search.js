@@ -20,7 +20,7 @@ class Search extends Component {
     var term = document.getElementById("search_term").value;
     var _this = this;
     
-    fetch("http://127.0.0.1/artists/find?query=" + term).then(function(response){
+    fetch("http://localhost:8080/artist/search?query=" + term).then(function(response){
         if (response.status !== 200) {  
           console.log('Looks like there was a problem. Status Code: ' +  response.status);  
           return;  
@@ -47,7 +47,7 @@ class Search extends Component {
 			{this.state.artists.map(function(artist, i){
 			    return (
             <li className="list-group-item">
-						  <Artist id={artist.id} thumb={artist.thumb} name={artist.name}/>
+						  <Artist id={artist.id} thumbUrl={artist.thumbUrl} name={artist.name}/>
 						</li>);
 		  })}  
       </ul>  
