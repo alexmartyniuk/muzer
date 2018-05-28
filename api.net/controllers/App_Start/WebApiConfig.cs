@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+  using System.Web.Http.Cors;
 
 namespace Controllers
 {
@@ -20,7 +21,7 @@ namespace Controllers
                 new QueryStringMapping("type", "xml", new MediaTypeHeaderValue("application/xml")));
 
             // Web API routes
-            config.EnableCors();
+            config.EnableCors(new EnableCorsAttribute("http://localhost:3000", "*", "*"));
             config.MapHttpAttributeRoutes();
         }
     }
