@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Linq;
 
 namespace MuzerAPI
 {
@@ -8,6 +9,7 @@ namespace MuzerAPI
     {
         public DatabaseContext() : base(@"Server=localhost\SQLEXPRESS;Database=Muzer;Trusted_Connection=True;")
         {
+            Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public DbSet<ArtistModel> Artists { get; set; }
@@ -21,11 +23,15 @@ namespace MuzerAPI
             modelBuilder.Entity<ArtistModel>().Property(a => a.Source).IsRequired();
             modelBuilder.Entity<ArtistModel>().Property(a => a.SourceId).IsRequired();
             modelBuilder.Entity<ArtistModel>().Property(a => a.Name).IsRequired();
-            
+
             modelBuilder.Entity<AlbumModel>().HasKey(a => a.Id);
             modelBuilder.Entity<AlbumModel>().Property(a => a.Source).IsRequired();
             modelBuilder.Entity<AlbumModel>().Property(a => a.SourceId).IsRequired();
             modelBuilder.Entity<AlbumModel>().Property(a => a.Title).IsRequired();
+            modelBuilder.Entity<AlbumModel>()
+                .HasRequired(a => a.Artist)
+                .WithMany(a=>a.Albums)
+                .HasForeignKey(al => al.ArtistId);
 
             modelBuilder.Entity<TrackModel>().HasKey(t => t.Id);
             modelBuilder.Entity<TrackModel>().Property(t => t.Title).IsRequired();

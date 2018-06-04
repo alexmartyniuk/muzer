@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +41,34 @@ namespace MuzerAPI.Repositories
             using (var database = new DatabaseContext())
             {
                 database.Artists.AddRange(artistsNew);
+                database.SaveChanges();
+            }
+        }
+
+        public ArtistModel GetByIdWithAlbums(long artistId)
+        {
+            using (var database = new DatabaseContext())
+            {
+                return database.Artists
+                    .Include(ar => ar.Albums)
+                    .SingleOrDefault(ar => ar.Id == artistId);                
+            }
+        }
+
+        public ArtistModel GetById(long artistId)
+        {
+            using (var database = new DatabaseContext())
+            {
+                return database.Artists
+                    .SingleOrDefault(ar => ar.Id == artistId);
+            }
+        }
+
+        public void Update(ArtistModel artist)
+        {
+            using (var database = new DatabaseContext())
+            {
+                database.Artists.AddOrUpdate(artist);
                 database.SaveChanges();
             }
         }

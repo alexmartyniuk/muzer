@@ -12,7 +12,7 @@ namespace MuzerAPI.ArtistService
     {
         public IEnumerable<ArtistModel> Search(string query)
         {
-            var discogsClient = new DiscogsClient("HNmJpKxApdkwljeHZxXRMFGgGVMfsODoOJojIXfh", "Muzer API");
+            var discogsClient = CreateDiscogsClient();
             var searchQuery = new SearchQuery
             {
                  Query = query,
@@ -47,6 +47,59 @@ namespace MuzerAPI.ArtistService
             artistRepository.SaveMany(artistsForSave);
 
             return artistRepository.GetBySourceIds(sourceIds);
+        }
+
+        public ArtistModel GetByIdWithAlbums(long artistId)
+        {
+            var artistRepository = new ArtistRepository();
+            var albumRepository = new AlbumRepository();
+
+            var artist = artistRepository.GetByIdWithAlbums(artistId);
+            if (artist == null)
+            {
+                throw new Exception($"Artist did not found by id: {artistId}");
+            }
+
+            if (string.IsNullOrEmpty(artist.Description))
+            {
+                var sourceId = int.Parse(artist.SourceId);
+                DiscogsClient discogsClient = CreateDiscogsClient();
+                var sourceArtist = discogsClient.GetArtist(sourceId);
+
+                artist.Description = sourceArtist.Profile;
+                artistRepository.Update(artist);
+            }
+
+            if (!artist.Albums.Any())
+            {
+                var sourceId = int.Parse(artist.SourceId);
+                var discogsClient = new DiscogsClient("HNmJpKxApdkwljeHZxXRMFGgGVMfsODoOJojIXfh", "Muzer API");
+
+                var releasesForSave = new List<AlbumModel>();
+                var sourceReleases = discogsClient.GetArtistReleases(sourceId);
+                foreach (var sourceRelease in sourceReleases.Releases)
+                {
+                    releasesForSave.Add(new AlbumModel
+                        {
+                            ArtistId = artist.Id,
+                            Source = SourceType.Discogs,
+                            SourceId = sourceId.ToString(),
+                            Thumb = sourceRelease.Thumb,
+                            Title = sourceRelease.Title,
+                            Year = sourceRelease.Year
+                        }
+                    );
+                }
+
+                albumRepository.SaveMany(releasesForSave);
+            }
+
+            return artistRepository.GetByIdWithAlbums(artistId);
+        }
+
+        private DiscogsClient CreateDiscogsClient()
+        {
+            return new DiscogsClient("HNmJpKxApdkwljeHZxXRMFGgGVMfsODoOJojIXfh", "Muzer API");
         }
     }
 }

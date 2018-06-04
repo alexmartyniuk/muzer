@@ -1,4 +1,6 @@
-﻿namespace MuzerAPI.Models
+﻿using System.Collections.Generic;
+
+namespace MuzerAPI.Models
 {
     public class ArtistModel
     {
@@ -8,5 +10,6 @@
         public string Name { get; set; }
         public string Description { get; set; }
         public string Thumb { get; set; }
+        public ICollection<AlbumModel> Albums { get; set; }
     }
 }
