@@ -100,11 +100,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controlers\AlbumController.cs" />
     <Compile Include="Controlers\ArtistController.cs" />
     <Compile Include="DtoConvertors\ArtistDtoConvertor.cs" />
     <Compile Include="Dtos\AlbumDto.cs" />
+    <Compile Include="Dtos\AlbumWithTracksDto.cs" />
     <Compile Include="Dtos\ArtistDto.cs" />
     <Compile Include="Dtos\ArtistWithAlbumsDto.cs" />
+    <Compile Include="Dtos\TrackDataDto.cs" />
+    <Compile Include="Dtos\TrackDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

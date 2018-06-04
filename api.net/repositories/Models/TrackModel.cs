@@ -1,4 +1,6 @@
-﻿namespace MuzerAPI.Models
+﻿using System.Collections.Generic;
+
+namespace MuzerAPI.Models
 {
     public class TrackModel
     {
@@ -9,5 +11,6 @@
         public ulong Duration { get; set; }
 
         public virtual AlbumModel Album { get; set; }
+        public ICollection<TrackDataModel> TrackDatas { get; set; }
     }
 }

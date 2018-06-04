@@ -1,4 +1,6 @@
-﻿namespace MuzerAPI.Models
+﻿using System.Collections.Generic;
+
+namespace MuzerAPI.Models
 {
     public class AlbumModel
     {
@@ -9,7 +11,7 @@
         public string Title { get; set; }
         public string Thumb { get; set; }
         public long Year { get; set; }
-
         public virtual ArtistModel Artist { get; set; }
+        public ICollection<TrackModel> Tracks { get; set; }
     }
 }

@@ -30,15 +30,23 @@ namespace MuzerAPI
             modelBuilder.Entity<AlbumModel>().Property(a => a.Title).IsRequired();
             modelBuilder.Entity<AlbumModel>()
                 .HasRequired(a => a.Artist)
-                .WithMany(a=>a.Albums)
+                .WithMany(a => a.Albums)
                 .HasForeignKey(al => al.ArtistId);
 
             modelBuilder.Entity<TrackModel>().HasKey(t => t.Id);
             modelBuilder.Entity<TrackModel>().Property(t => t.Title).IsRequired();
-            
+            modelBuilder.Entity<TrackModel>()
+                .HasRequired(a => a.Album)
+                .WithMany(a => a.Tracks)
+                .HasForeignKey(al => al.AlbumId);
+
             modelBuilder.Entity<TrackDataModel>().HasKey(t => t.Id);
             modelBuilder.Entity<TrackDataModel>().Property(t => t.Source).IsRequired();
             modelBuilder.Entity<TrackDataModel>().Property(t => t.SourceUrl).IsRequired();
+            modelBuilder.Entity<TrackDataModel>()
+                .HasRequired(a => a.Track)
+                .WithMany(a => a.TrackDatas)
+                .HasForeignKey(al => al.TrackId);
         }
     }
 }

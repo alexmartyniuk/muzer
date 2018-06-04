@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlbumService\AlbumService.cs" />
     <Compile Include="ArtistService\ArtistService.cs" />
     <Compile Include="FindTrackTaskService\FindTrackTask.cs" />
     <Compile Include="FindTrackTaskService\FindTrackTaskService.cs" />

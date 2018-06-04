@@ -12,32 +12,14 @@ class Track extends React.Component {
 		};
   	}
 
-	componentDidMount() {
-		var _this = this;
-		fetch("http://localhost:8080/tracks/" + this.props.id).then(function(response){
-            if (response.status !== 200) {  
-                console.log('Looks like there was a problem. Status Code: ' +  response.status);  
-                return;  
-            }
-
-            response.json().then(function(data) {  
-                _this.setState(
-                    {
-                        track: data
-                    });
-            });  
-      }); 
-	}
-
     
     render() {		
 		return (
 			<div className="alert alert-success">
-                <p>{this.state.track.title}</p>				
+                <p>{this.props.position} : {this.props.title}</p>				
 
-                {this.state.track.url &&
-					//<ReactPlayer url={this.state.track.url} />
-                    <ReactAudioPlayer src={this.state.track.url}/>
+                {this.props.url &&
+                    <ReactAudioPlayer src={this.props.url}/>
 				}                 
             </div>
 		);

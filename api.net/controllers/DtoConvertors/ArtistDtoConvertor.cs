@@ -20,7 +20,7 @@ namespace MuzerAPI.DtoConvertors
             };
         }
 
-        public static AlbumDto AlbumModelToDto(AlbumModel album)
+        private static AlbumDto AlbumModelToDto(AlbumModel album)
         {
             return new AlbumDto
             {
@@ -31,6 +31,34 @@ namespace MuzerAPI.DtoConvertors
             };
         }
 
+        private static TrackDto TrackModelToDto(TrackModel track)
+        {
+            return new TrackDto
+            {
+                Id = track.Id,
+                Position = track.Position,
+                Title = track.Title,
+                Data = TrackDataModelToDto(track.TrackDatas.FirstOrDefault())
+            };
+        }
+
+        private static TrackDataDto TrackDataModelToDto(TrackDataModel trackData)
+        {
+            if (trackData == null)
+            {
+                return null;
+            }
+
+            return new TrackDataDto
+            {
+                Id = trackData.Id,
+                Url = trackData.Url,
+                Duration = trackData.Duration,
+                Quality = trackData.Quality.ToString(),
+                SourceUrl = trackData.SourceUrl
+            };
+        }
+
         public static ArtistWithAlbumsDto ArtistModelWithAlbumsToDto(ArtistModel artist)
         {
             return new ArtistWithAlbumsDto
@@ -38,6 +66,16 @@ namespace MuzerAPI.DtoConvertors
                 Artist = ArtistModelToDto(artist),
                 Albums = artist.Albums?.Select(AlbumModelToDto)
             };
+        }
+
+        public static ArtistWithTracksDto AlbumModelWithTracksToDto(AlbumModel album)
+        {
+            return new ArtistWithTracksDto
+            {
+                Album = AlbumModelToDto(album),
+                Artist = ArtistModelToDto(album.Artist),
+                Tracks = album.Tracks?.Select(TrackModelToDto)
+            }; 
         }
     }
 }

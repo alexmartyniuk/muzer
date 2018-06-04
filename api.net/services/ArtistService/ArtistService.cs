@@ -73,7 +73,7 @@ namespace MuzerAPI.ArtistService
             if (!artist.Albums.Any())
             {
                 var sourceId = int.Parse(artist.SourceId);
-                var discogsClient = new DiscogsClient("HNmJpKxApdkwljeHZxXRMFGgGVMfsODoOJojIXfh", "Muzer API");
+                var discogsClient = CreateDiscogsClient();
 
                 var releasesForSave = new List<AlbumModel>();
                 var sourceReleases = discogsClient.GetArtistReleases(sourceId);
