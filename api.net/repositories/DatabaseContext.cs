@@ -1,10 +1,8 @@
 ﻿using System.Data.Entity;
-using System.Linq;
+using MuzerAPI.Models;
 
 namespace MuzerAPI
 {
-    using MuzerAPI.Models;
-
     public class DatabaseContext : DbContext
     {
         public DatabaseContext() : base(@"Server=localhost\SQLEXPRESS;Database=Muzer;Trusted_Connection=True;")

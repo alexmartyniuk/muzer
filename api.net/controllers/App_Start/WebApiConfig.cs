@@ -1,8 +1,11 @@
-﻿  using System.Web.Http;
+﻿using System.Web.Http;
 using Newtonsoft.Json.Serialization;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-  using System.Web.Http.Cors;
+using System.Web.Http.Cors;
+using Common;
+using MuzerAPI;
+using Unity;
 
 namespace Controllers
 {
@@ -23,6 +26,11 @@ namespace Controllers
             // Web API routes
             config.EnableCors(new EnableCorsAttribute("http://localhost:3000", "*", "*"));
             config.MapHttpAttributeRoutes();
+
+            var container = new UnityContainer();
+            container.AddExtension(new ControllersUnityExtension());
+            
+            config.DependencyResolver = new UnityResolver(container);
         }
     }
 }

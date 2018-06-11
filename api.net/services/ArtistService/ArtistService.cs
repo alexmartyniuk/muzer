@@ -10,6 +10,15 @@ namespace MuzerAPI.ArtistService
 {
     public class ArtistService
     {
+        private readonly AlbumRepository _albumRepository;
+        private readonly ArtistRepository _artistRepository;
+
+        public ArtistService(AlbumRepository albumRepository, ArtistRepository artistRepository)
+        {
+            _albumRepository = albumRepository;
+            _artistRepository = artistRepository;
+        }
+
         public IEnumerable<ArtistModel> Search(string query)
         {
             var discogsClient = CreateDiscogsClient();
@@ -19,11 +28,10 @@ namespace MuzerAPI.ArtistService
                  Type = SearchItemType.Artist
             };
 
-            var artistRepository = new ArtistRepository();
             var searchResults = discogsClient.Search(searchQuery).Results;
             var sourceIds = searchResults.Select(sr => sr.Id.ToString());
 
-            var artistExisted = artistRepository.GetBySourceIds(sourceIds);
+            var artistExisted = _artistRepository.GetBySourceIds(sourceIds);
             if (artistExisted.Count() == sourceIds.Count())
             {
                 return artistExisted;
@@ -44,17 +52,14 @@ namespace MuzerAPI.ArtistService
                 });                
             }
 
-            artistRepository.SaveMany(artistsForSave);
+            _artistRepository.SaveMany(artistsForSave);
 
-            return artistRepository.GetBySourceIds(sourceIds);
+            return _artistRepository.GetBySourceIds(sourceIds);
         }
 
         public ArtistModel GetByIdWithAlbums(long artistId)
         {
-            var artistRepository = new ArtistRepository();
-            var albumRepository = new AlbumRepository();
-
-            var artist = artistRepository.GetByIdWithAlbums(artistId);
+            var artist = _artistRepository.GetByIdWithAlbums(artistId);
             if (artist == null)
             {
                 throw new Exception($"Artist did not found by id: {artistId}");
@@ -67,7 +72,7 @@ namespace MuzerAPI.ArtistService
                 var sourceArtist = discogsClient.GetArtist(sourceId);
 
                 artist.Description = sourceArtist.Profile;
-                artistRepository.Update(artist);
+                _artistRepository.Update(artist);
             }
 
             if (!artist.Albums.Any())
@@ -91,10 +96,10 @@ namespace MuzerAPI.ArtistService
                     );
                 }
 
-                albumRepository.SaveMany(releasesForSave);
+                _albumRepository.SaveMany(releasesForSave);
             }
 
-            return artistRepository.GetByIdWithAlbums(artistId);
+            return _artistRepository.GetByIdWithAlbums(artistId);
         }
 
         private DiscogsClient CreateDiscogsClient()

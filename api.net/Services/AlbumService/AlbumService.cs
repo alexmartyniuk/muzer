@@ -11,12 +11,18 @@ namespace MuzerAPI.AlbumService
 {
     public class AlbumService
     {
+        private readonly AlbumRepository _albumRepository;
+        private readonly TrackRepository _trackRepository;
+
+        public AlbumService(AlbumRepository albumRepository, TrackRepository trackRepository)
+        {
+            _albumRepository = albumRepository;
+            _trackRepository = trackRepository;
+        }
+
         public AlbumModel GetByIdWithTracks(long albumId)
         {
-            var albumRepository = new AlbumRepository();
-            var trackRepository = new TrackRepository();
-
-            var album = albumRepository.GetByIdWithTracks(albumId);
+            var album = _albumRepository.GetByIdWithTracks(albumId);
             if (album == null)
             {
                 throw new Exception($"Artist did not found by id: {albumId}");
@@ -41,10 +47,10 @@ namespace MuzerAPI.AlbumService
                     );
                 }
 
-                trackRepository.SaveMany(tracksForSave);
+                _trackRepository.SaveMany(tracksForSave);
             }
 
-            return albumRepository.GetByIdWithTracks(album.Id);
+            return _albumRepository.GetByIdWithTracks(album.Id);
         }
 
         private ulong DurationToSec(string duration)

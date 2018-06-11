@@ -7,25 +7,26 @@ namespace MuzerAPI.Repositories
 {
     public class AlbumRepository
     {
+        private readonly DatabaseContext _database;
+
+        public AlbumRepository(DatabaseContext database)
+        {
+            _database = database;
+        }
+
         public void SaveMany(IEnumerable<AlbumModel> albumsNew)
         {
-            using (var database = new DatabaseContext())
-            {
-                database.Albums.AddRange(albumsNew);
-                database.SaveChanges();
-            }
+            _database.Albums.AddRange(albumsNew);
+            _database.SaveChanges();            
         }
 
         public AlbumModel GetByIdWithTracks(long albumId)
         {
-            using (var database = new DatabaseContext())
-            {
-                return database.Albums
-                    .Include(al => al.Artist)
-                    .Include(al => al.Tracks)
-                    .Include(al => al.Tracks.Select(tr => tr.TrackDatas))
-                    .SingleOrDefault(al => al.Id == albumId);
-            }
+            return _database.Albums
+                .Include(al => al.Artist)
+                .Include(al => al.Tracks)
+                .Include(al => al.Tracks.Select(tr => tr.TrackDatas))
+                .SingleOrDefault(al => al.Id == albumId);            
         }
     }
 }

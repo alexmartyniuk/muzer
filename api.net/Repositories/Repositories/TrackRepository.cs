@@ -5,13 +5,16 @@ namespace MuzerAPI.Repositories
 {
     public class TrackRepository
     {
+        private readonly DatabaseContext _database;
+
+        public TrackRepository(DatabaseContext database)
+        {
+            _database = database;
+        }
         public void SaveMany(IEnumerable<TrackModel> tracks)
         {
-            using (var database = new DatabaseContext())
-            {
-                database.Tracks.AddRange(tracks);
-                database.SaveChanges();
-            }
+            _database.Tracks.AddRange(tracks);
+            _database.SaveChanges();            
         }
     }
 }

@@ -1,16 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
-using MuzerAPI.ArtistService;
 using MuzerAPI.DtoConvertors;
 using MuzerAPI.Dtos;
 
-namespace MuzerAPI.Controllers
+namespace MuzerAPI.Controlers
 {
     public class ArtistController : ApiController
     {
+        private readonly ArtistService.ArtistService _artistService;
+
+        public ArtistController(ArtistService.ArtistService artistService)
+        {
+            _artistService = artistService;
+        }
+
         [HttpGet]
         [Route("artist/search")]
         public IEnumerable<ArtistDto> Search([FromUri] string query)
@@ -20,8 +25,7 @@ namespace MuzerAPI.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var service = new ArtistService.ArtistService();
-            var artists = service.Search(query);
+            var artists = _artistService.Search(query);
 
             return artists.Select(ArtistDtoConvertor.ArtistModelToDto);
         }
@@ -35,8 +39,7 @@ namespace MuzerAPI.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var service = new ArtistService.ArtistService();
-            var artistWithAlbums = service.GetByIdWithAlbums(artistId);
+            var artistWithAlbums = _artistService.GetByIdWithAlbums(artistId);
             
             return ArtistDtoConvertor.ArtistModelWithAlbumsToDto(artistWithAlbums); 
         }

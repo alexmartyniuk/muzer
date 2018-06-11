@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Http;
-using MuzerAPI.ArtistService;
+using MuzerAPI.AlbumService;
 using MuzerAPI.DtoConvertors;
 using MuzerAPI.Dtos;
 
@@ -12,6 +12,13 @@ namespace MuzerAPI.Controlers
 {
     public class AlbumController : ApiController
     {
+        private readonly AlbumService.AlbumService _albumService;
+
+        public AlbumController(AlbumService.AlbumService albumService)
+        {
+            _albumService = albumService;            
+        }
+
         [HttpGet]
         [Route("album/{albumId}")]
         public ArtistWithTracksDto Get(long albumId)
@@ -21,8 +28,7 @@ namespace MuzerAPI.Controlers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var service = new AlbumService.AlbumService();
-            var artistWithAlbums = service.GetByIdWithTracks(albumId);
+            var artistWithAlbums = _albumService.GetByIdWithTracks(albumId);
 
             return ArtistDtoConvertor.AlbumModelWithTracksToDto(artistWithAlbums);
         }

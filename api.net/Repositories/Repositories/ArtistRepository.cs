@@ -11,66 +11,52 @@ namespace MuzerAPI.Repositories
 {
     public class ArtistRepository
     {
+        private readonly DatabaseContext _database;
+
+        public ArtistRepository(DatabaseContext database)
+        {
+            _database = database;
+        }
+
         public ArtistModel GetBySourceId(string sourceId)
         {
-            using (var database = new DatabaseContext())
-            {
-                return database.Artists.SingleOrDefault(art => art.SourceId == sourceId);
-            }
+            return _database.Artists.SingleOrDefault(art => art.SourceId == sourceId);
         }
 
         public IList<ArtistModel> GetBySourceIds(IEnumerable<string> sourceIds)
         {
-            using (var database = new DatabaseContext())
-            {
-                return database.Artists.Where(art => sourceIds.Contains(art.SourceId)).ToList();
-            }
+            return _database.Artists.Where(art => sourceIds.Contains(art.SourceId)).ToList();
         }
 
         public void SaveOne(ArtistModel artistNew)
         {
-            using (var database = new DatabaseContext())
-            {
-                database.Artists.Add(artistNew);
-                database.SaveChanges();
-            }
+            _database.Artists.Add(artistNew);
+            _database.SaveChanges();            
         }
 
         public void SaveMany(IEnumerable<ArtistModel> artistsNew)
         {
-            using (var database = new DatabaseContext())
-            {
-                database.Artists.AddRange(artistsNew);
-                database.SaveChanges();
-            }
+            _database.Artists.AddRange(artistsNew);
+            _database.SaveChanges();
         }
 
         public ArtistModel GetByIdWithAlbums(long artistId)
         {
-            using (var database = new DatabaseContext())
-            {
-                return database.Artists
-                    .Include(ar => ar.Albums)
-                    .SingleOrDefault(ar => ar.Id == artistId);                
-            }
+            return _database.Artists
+                .Include(ar => ar.Albums)
+                .SingleOrDefault(ar => ar.Id == artistId);                            
         }
 
         public ArtistModel GetById(long artistId)
         {
-            using (var database = new DatabaseContext())
-            {
-                return database.Artists
-                    .SingleOrDefault(ar => ar.Id == artistId);
-            }
+            return _database.Artists
+                .SingleOrDefault(ar => ar.Id == artistId);            
         }
 
         public void Update(ArtistModel artist)
         {
-            using (var database = new DatabaseContext())
-            {
-                database.Artists.AddOrUpdate(artist);
-                database.SaveChanges();
-            }
+            _database.Artists.AddOrUpdate(artist);
+            _database.SaveChanges();            
         }
     }
 }
