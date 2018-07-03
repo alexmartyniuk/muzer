@@ -34,7 +34,7 @@ namespace MuzerAPI.AlbumService
                 var discogsClient = CreateDiscogsClient();
 
                 var tracksForSave = new List<TrackModel>();
-                var sourceTracks = discogsClient.GetRelease(sourceId);
+                var sourceTracks = discogsClient.GetMasterRelease(sourceId);
                 foreach (var sourceTrack in sourceTracks.Tracklist)
                 {
                     tracksForSave.Add(new TrackModel
@@ -53,10 +53,15 @@ namespace MuzerAPI.AlbumService
             return _albumRepository.GetByIdWithTracks(album.Id);
         }
 
-        private ulong DurationToSec(string duration)
+        private long DurationToSec(string duration)
         {
-            var min = ulong.Parse(duration.Split(':')[0]);
-            var sec = ulong.Parse(duration.Split(':')[1]);
+            if (string.IsNullOrEmpty(duration))
+            {
+                return 0;
+            }
+
+            var min = long.Parse(duration.Split(':')[0]);
+            var sec = long.Parse(duration.Split(':')[1]);
 
             return min * 60 + sec;
         }

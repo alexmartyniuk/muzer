@@ -88,7 +88,7 @@ namespace MuzerAPI.ArtistService
                         {
                             ArtistId = artist.Id,
                             Source = SourceType.Discogs,
-                            SourceId = sourceId.ToString(),
+                            SourceId = sourceRelease.Id.ToString(),
                             Thumb = sourceRelease.Thumb,
                             Title = sourceRelease.Title,
                             Year = sourceRelease.Year
