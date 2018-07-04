@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using System.Messaging;
 using MuzerAPI.Implementation;
+using MuzerAPI.Models;
 
 namespace MuzerAPI
 {
     public class FindTrackTaskService
     {
-        private string _messageQueueName;
-
         private const long GetTimeoutInMilliseconds = 1000;
-
+        private string _messageQueueName;
         private Dictionary<FindTrackTask, MessageQueueTransaction> _openedTransactions = new Dictionary<FindTrackTask, MessageQueueTransaction>();
 
-        public FindTrackTaskService(string queueName = "muzer_find_track")
+        public FindTrackTaskService()
         {
-            _messageQueueName = @".\Private$\" + queueName;
+            QueueName = @"muzer_find_track";
+        }
+
+        public string QueueName
+        {
+            get => _messageQueueName;
+            set => _messageQueueName = @".\Private$\" + value;
         }
 
         public bool IsTaskExists(FindTrackTask task)
@@ -102,6 +107,16 @@ namespace MuzerAPI
             }
         }
 
+        public FindTrackTask NewTask(TrackModel trackModel)
+        {
+            return new FindTrackTask(trackModel.Id)
+            {
+                Artist = trackModel.Album.Artist.Name,
+                Album = trackModel.Album.Title,
+                Track = trackModel.Title                
+            };
+        }
+
         public void TaskDone(FindTrackTask task)
         {
             if (_openedTransactions.TryGetValue(task, out var transaction))
@@ -149,11 +164,6 @@ namespace MuzerAPI
             {
                 MessageQueue.Delete(_messageQueueName);
             }
-        }
-
-        public FindTrackTask NewTask(string artist, string album, string track)
-        {
-            return new FindTrackTask { Artist = artist, Album = album, Track = track };
         }
 
         private MessageQueue GetMessageQueue()

@@ -13,11 +13,13 @@ namespace MuzerAPI.AlbumService
     {
         private readonly AlbumRepository _albumRepository;
         private readonly TrackRepository _trackRepository;
+        private readonly FindTrackTaskService _findTrackService;
 
-        public AlbumService(AlbumRepository albumRepository, TrackRepository trackRepository)
+        public AlbumService(AlbumRepository albumRepository, TrackRepository trackRepository, FindTrackTaskService findTrackService)
         {
             _albumRepository = albumRepository;
             _trackRepository = trackRepository;
+            _findTrackService = findTrackService;
         }
 
         public AlbumModel GetByIdWithTracks(long albumId)
@@ -50,7 +52,19 @@ namespace MuzerAPI.AlbumService
                 _trackRepository.SaveMany(tracksForSave);
             }
 
-            return _albumRepository.GetByIdWithTracks(album.Id);
+            var result = _albumRepository.GetByIdWithTracks(album.Id);
+
+            // create find-tasks for tracks with empty data
+            foreach (var trackModel in result.Tracks)
+            {
+                if (!trackModel.TrackDatas.Any())
+                {
+                    var task = _findTrackService.NewTask(trackModel);
+                    _findTrackService.AddTask(task);
+                }
+            }
+
+            return result;
         }
 
         private long DurationToSec(string duration)
