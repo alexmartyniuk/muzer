@@ -56,6 +56,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Repositories\Repositories.csproj">
+      <Project>{d4c23415-fb78-4014-86d1-f1a5fcff39b9}</Project>
+      <Name>Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Services\Services.csproj">
       <Project>{2a712789-47ff-424e-a992-a43a2260b106}</Project>
       <Name>Services</Name>

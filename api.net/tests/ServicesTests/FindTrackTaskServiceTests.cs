@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MuzerAPI;
 using MuzerAPI.Implementation;
+using MuzerAPI.Models;
 
 namespace ServicesTests
 {
@@ -14,13 +15,26 @@ namespace ServicesTests
         const string Album2 = "Album2";
         const string Track1 = "Track1";
         const string Track2 = "Track2";
+        const long TrackId1 = 1;
+        const long TrackId2 = 2;
+
+        private static readonly ArtistModel ArtistModel1 = new ArtistModel { Name = Artist1 };
+        private static readonly AlbumModel AlbumModel1 = new AlbumModel { Title = Album1, Artist = ArtistModel1};
+        private static readonly TrackModel TrackModel1 = new TrackModel{ Album = AlbumModel1, Title = Track1, Id = TrackId1};
+
+        private static readonly ArtistModel ArtistModel2 = new ArtistModel { Name = Artist2 };
+        private static readonly AlbumModel AlbumModel2 = new AlbumModel { Title = Album2, Artist = ArtistModel2 };
+        private static readonly TrackModel TrackModel2 = new TrackModel { Album = AlbumModel2, Title = Track2, Id = TrackId2 };
 
         FindTrackTaskService _service;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _service = new FindTrackTaskService(DateTime.Now.ToLongTimeString());
+            _service = new FindTrackTaskService
+            {
+                QueueName = DateTime.Now.ToLongTimeString()
+            };
         }
 
         [TestCleanup]
@@ -32,7 +46,7 @@ namespace ServicesTests
         [TestMethod]
         public void AddingNewTaskShouldBeSuccessful()
         {
-            var task = _service.NewTask(Artist1, Album1, Track1);
+            var task = _service.NewTask(TrackModel1);
             var result = _service.AddTask(task);
             Assert.IsTrue(result);
 
@@ -53,11 +67,11 @@ namespace ServicesTests
         [TestMethod]
         public void Adding2NewTasksShouldBeSuccessful()
         {
-            var task1 = _service.NewTask(Artist1, Album1, Track1);
+            var task1 = _service.NewTask(TrackModel1);
             var result1 = _service.AddTask(task1);
             Assert.IsTrue(result1);
 
-            var task2 = _service.NewTask(Artist2, Album2, Track2);
+            var task2 = _service.NewTask(TrackModel2);
             var result2 = _service.AddTask(task2);
             Assert.IsTrue(result2);
 
@@ -91,7 +105,7 @@ namespace ServicesTests
         [TestMethod]
         public void AddingTwoSameTasksShouldBeFailed()
         {
-            var task = _service.NewTask(Artist1, Album1, Track1);
+            var task = _service.NewTask(TrackModel1);
             var result = _service.AddTask(task);
             Assert.IsTrue(result);
 
@@ -115,7 +129,7 @@ namespace ServicesTests
         [TestMethod]
         public void GetAndDoneTaskShouldRemoveTask()
         {
-            var task = _service.NewTask(Artist1, Album1, Track1);
+            var task = _service.NewTask(TrackModel1);
             var result = _service.AddTask(task);
             Assert.IsTrue(result);
 
@@ -139,7 +153,7 @@ namespace ServicesTests
         [TestMethod]
         public void GetAndFailTaskShouldLeaveTask()
         {
-            var task = _service.NewTask(Artist1, Album1, Track1);
+            var task = _service.NewTask(TrackModel1);
             var result = _service.AddTask(task);
             Assert.IsTrue(result);
 
@@ -169,12 +183,12 @@ namespace ServicesTests
         {
             Assert.AreEqual(0, _service.TasksCount());
 
-            var task1 = _service.NewTask(Artist1, Album1, Track1);
+            var task1 = _service.NewTask(TrackModel1);
             var result = _service.AddTask(task1);
             Assert.IsTrue(result);
             Assert.AreEqual(1, _service.TasksCount());
 
-            var task2 = _service.NewTask(Artist2, Album2, Track2);
+            var task2 = _service.NewTask(TrackModel2);
             result = _service.AddTask(task2);
             Assert.IsTrue(result);
             Assert.AreEqual(2, _service.TasksCount());
@@ -191,7 +205,7 @@ namespace ServicesTests
         [TestMethod]
         public void NewTaskShouldBeCreatedSuccesfully()
         {
-            var task1 = _service.NewTask(Artist1, Album1, Track1);
+            var task1 = _service.NewTask(TrackModel1);
             Assert.AreEqual(Artist1, task1.Artist);
             Assert.AreEqual(Album1, task1.Album);
             Assert.AreEqual(Track1, task1.Track);
