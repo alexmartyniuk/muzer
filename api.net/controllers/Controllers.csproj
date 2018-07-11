@@ -126,6 +126,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controlers\AlbumController.cs" />
     <Compile Include="Controlers\ArtistController.cs" />
+    <Compile Include="Controlers\FileController.cs" />
     <Compile Include="ControllersUnityExtension.cs" />
     <Compile Include="DtoConvertors\ArtistDtoConvertor.cs" />
     <Compile Include="Dtos\AlbumDto.cs" />

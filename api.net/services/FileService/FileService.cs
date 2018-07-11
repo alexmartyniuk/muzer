@@ -16,7 +16,7 @@ namespace MuzerAPI.FileService
 
         public string Add(Stream stream)
         {
-            var fileId = GenerateUniquePath(stream);
+            var fileId = GenerateUniqueId();
             var fullPath = GetFullPath(fileId);
 
             using (var fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
@@ -44,6 +44,7 @@ namespace MuzerAPI.FileService
                 fileStream.CopyTo(result);
             }
 
+            result.Seek(0, SeekOrigin.Begin);
             return result;
         }
 
@@ -68,7 +69,11 @@ namespace MuzerAPI.FileService
 
         private string GetFullPath(string fileId)
         {
-            var path = Path.Combine(StorageRoot, fileId);
+            var dir1 = fileId.Substring(0, 4);
+            var dir2 = fileId.Substring(4, 4);
+            var file = fileId.Substring(8);
+
+            var path = Path.Combine(StorageRoot, dir1, dir2, file);
             var dir = Path.GetDirectoryName(path);
             if (!Directory.Exists(dir))
             {
@@ -78,10 +83,10 @@ namespace MuzerAPI.FileService
             return path;
         }
 
-        private string GenerateUniquePath(Stream stream)
+        private string GenerateUniqueId()
         {
             var guid = Guid.NewGuid().ToString();            
-            return guid.Replace(@"-", @"\");
+            return guid.Replace(@"-", @"");
         }
     }
 }
