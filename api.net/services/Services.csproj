@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="AlbumService\AlbumService.cs" />
     <Compile Include="ArtistService\ArtistService.cs" />
+    <Compile Include="FileService\FileService.cs" />
     <Compile Include="FindTrackTaskService\FindTrackTask.cs" />
     <Compile Include="FindTrackTaskService\FindTrackTaskService.cs" />
     <Compile Include="FindTrackTaskService\JsonMessageFormatter.cs" />

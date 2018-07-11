@@ -18,6 +18,7 @@ namespace MuzerAPI
             Container.RegisterType<FindTrackTaskService, FindTrackTaskService>(new HierarchicalLifetimeManager());
             Container.RegisterType<AlbumService.AlbumService, AlbumService.AlbumService>(new HierarchicalLifetimeManager());
             Container.RegisterType<ArtistService.ArtistService, ArtistService.ArtistService>(new HierarchicalLifetimeManager());
+            Container.RegisterType<FileService.FileService, FileService.FileService>(new HierarchicalLifetimeManager());
         }
     }
 }
