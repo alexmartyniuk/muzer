@@ -49,10 +49,16 @@ namespace MuzerAPI.DtoConvertors
                 return null;
             }
 
+            var url = new UriBuilder(HttpContext.Current.Request.Url)
+            {
+                Port = 8080,
+                Path = @"file/" + trackData.Url
+            };
+
             return new TrackDataDto
             {
                 Id = trackData.Id,
-                Url = trackData.Url,
+                Url = url.Uri.AbsoluteUri,
                 Duration = trackData.Duration,
                 Quality = trackData.Quality.ToString(),
                 SourceUrl = trackData.SourceUrl

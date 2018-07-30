@@ -41,7 +41,7 @@ class AlbumDetails extends React.Component {
 				{this.state.tracks.map(function(track, i){
 					return (
 						<div>
-							<Track id={track.id} title={track.title} position={track.position}/>
+							<Track id={track.id} title={track.title} position={track.position} data={track.data}/>
 						</div>);
 				})} 
             </div>

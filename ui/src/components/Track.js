@@ -18,8 +18,8 @@ class Track extends React.Component {
 			<div className="alert alert-success">
                 <p>{this.props.position} : {this.props.title}</p>				
 
-                {this.props.url &&
-                    <ReactAudioPlayer src={this.props.url}/>
+                {this.props.data &&
+                    <ReactAudioPlayer src={this.props.data.url}/>
 				}                 
             </div>
 		);

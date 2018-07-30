@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using System.Web.Routing;
 using MuzerAPI.DtoConvertors;
 
 namespace MuzerAPI.Controlers
@@ -39,9 +40,9 @@ namespace MuzerAPI.Controlers
                 };
 
                 result.Content.Headers.ContentDisposition =
-                    new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+                    new ContentDispositionHeaderValue("attachment")
                     {
-                        FileName = "file.mp3"
+                        FileName = $"{fileId}.mp3"
                     };
                 result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
 
